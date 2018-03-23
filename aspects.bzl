@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# bazel query 'kind("cc_(library|binary|test)", //...)' //< returns list of all cc modules used in workspace
+# bazel build --aspects=BuildSystem/bazel-compdb/aspects.bzl%compilation_database_aspect --output_groups=compdb_files //:rae
+
 """Compilation database generation Bazel rules.
 
 compilation_database will generate a compile_commands.json file for the
@@ -73,7 +76,7 @@ def _compilation_database_aspect_impl(target, ctx):
     for src in srcs:
         command_for_file = compile_command + " -c " + src.path
 
-        bazel_workspace_dir = "__WORKSPACE_ROOT__" + "/bazel-" + ctx.workspace_name
+        bazel_workspace_dir = "__WORKSPACE_ROOT__"
         compilation_db.append(
             struct(directory=bazel_workspace_dir, command=command_for_file, file=src.path))
 
@@ -112,7 +115,7 @@ def _compilation_database_impl(ctx):
 
     content = "[\n" + _compilation_db_json(compilation_db) + "\n]\n"
     if ctx.attr.remove_workspace_root_marker:
-        content = content.replace("__WORKSPACE_ROOT__/", "")
+        content = content.replace("__WORKSPACE_ROOT__", "bazel-" + ctx.workspace_name)
     ctx.file_action(output=ctx.outputs.filename, content=content)
 
 

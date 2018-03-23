@@ -1,4 +1,4 @@
-Compilation database with Bazel [![Build Status](https://travis-ci.org/grailbio/bazel-compilation-database.svg?branch=master)](https://travis-ci.org/grailbio/bazel-compilation-database)
+Compilation database with Bazel [![Build Status](https://travis-ci.org/matzkowsky/bazel-compilation-database.svg?branch=master)](https://travis-ci.org/matzkowsky/bazel-compilation-database)
 ===============================
 
 If you use [Bazel][bazel] and want to use libclang based editors and tools, you
@@ -17,7 +17,7 @@ the `generate.sh` script.  This will create a `compile_commands.json` file at
 your workspace root. For example,
 
 ```sh
-  git submodule add https://github.com/grailbio/bazel-compilation-database bazel-compdb
+  git submodule add https://github.com/matzkowsky/bazel-compilation-database bazel-compdb
   bazel-compdb/generate.sh
 ```
 
@@ -36,12 +36,12 @@ compilation_database(
         "//a_cc_binary_label",
         "//a_cc_library_label",
     ],
-    exec_root_marker = True,
+    remove_workspace_root_marker = True,
 )
 ```
 
-Note that you will have to replace "__EXEC_ROOT__" in the generated file with
-the output of `bazel info execution_root`. Or you can set `exec_root_marker`
+Note that you will have to replace "__WORKSPACE_ROOT__" in the generated file with
+the output of `bazel info workspace`. Or you can set `remove_workspace_root_marker`
 attribute to `False` in which case, the directory entry will simply be
 `bazel-{workspace name}`
 
